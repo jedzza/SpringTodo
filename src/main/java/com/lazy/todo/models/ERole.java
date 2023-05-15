@@ -1,0 +1,7 @@
+package com.lazy.todo.models;
+
+public enum ERole {
+  ROLE_USER,
+  ROLE_MODERATOR,
+  ROLE_ADMIN
+}

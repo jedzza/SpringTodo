@@ -16,7 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -45,7 +45,7 @@ class ProjectServiceUnitTest {
     @Autowired
     ProjectService projectService;
 
-    Task TASK_1 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title1", "description1");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
 
     User USER_1 = new User("testUserName1", "test@test.co.uk", "testPassword1");
 

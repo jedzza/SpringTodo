@@ -5,7 +5,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 //the purpose of this task is to expose to the user those fields we wish them to be able to edit inside the Task POJO
 @Getter
@@ -21,11 +21,11 @@ public class TaskRequest {
 
     private String description;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime targetDate;
+    private LocalDate targetDate;
 
-    private LocalDateTime checked;
+    private LocalDate checked;
 
     private Project project;
 
@@ -36,7 +36,7 @@ public class TaskRequest {
 
 
     //define a constructor here to allow for creation of "headless" task without a project
-    public TaskRequest(LocalDateTime startDate, LocalDateTime targetDate, LocalDateTime checked, String title,
+    public TaskRequest(LocalDate startDate, LocalDate targetDate, LocalDate checked, String title,
                        String description){
         this.startDate = startDate;
         this.targetDate = targetDate;
@@ -44,4 +44,5 @@ public class TaskRequest {
         this.title = title;
         this.description = description;
     }
+
 }

@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,9 +33,9 @@ class TaskControllerUnitTest {
     @MockBean
     JwtUtils jwtUtils;
 
-    Task TASK_1 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title1", "description1");
-    Task TASK_2 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title2", "description2");
-    Task TASK_3 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title3", "description3");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
+    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");
+    Task TASK_3 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title3", "description3");
 
     User USER_1 = new User("testusername1", "test@test.co.uk", "testpassword1");
     User USER_2 = new User("testusername2", "test@test.com", "testpassword2");
@@ -181,7 +181,7 @@ class TaskControllerUnitTest {
         when(jwtUtils.validateJwtToken("placeholderJwt")).thenReturn(true);
         Task task = new Task("testtile", "testdescription");
         when(taskService.deleteTaskById("placeholderJwt", 1L)).thenReturn(task);
-        assertEquals(ResponseEntity.ok(task+" deleted"), taskController.deleteTask(1l, "bearer placeholderJwt"));
+        assertEquals(ResponseEntity.ok(task), taskController.deleteTask(1l, "bearer placeholderJwt"));
     }
 
     @Test

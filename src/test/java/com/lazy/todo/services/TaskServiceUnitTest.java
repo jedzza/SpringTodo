@@ -15,7 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -41,9 +41,9 @@ class TaskServiceUnitTest {
     @MockBean
     TaskRepository taskRepository;
 
-    Task TASK_1 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title1", "description1");
-    Task TASK_2 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title2", "description2");
-    Task TASK_3 = new Task(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), "title3", "description3");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
+    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");
+    Task TASK_3 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title3", "description3");
 
     User USER_1 = new User("testUserName1", "test@test.co.uk", "testPassword1");
     User USER_2 = new User("testUserName2", "test@test.com", "testPassword2");
@@ -160,7 +160,7 @@ class TaskServiceUnitTest {
         TaskRequest taskRequest = new TaskRequest("changedTitle", "changedDescription");
         USER_1.getTasks().add(TASK_1);
         when(jwtUtils.getUserNameFromJwtToken("placeholderJwt")).thenReturn(USER_1.getUsername());
-
+        when(userRepository.findByUsername(USER_1.getUsername())).thenReturn(Optional.ofNullable(USER_1));
         when(taskRepository.findById(1L)).thenReturn(Optional.ofNullable(TASK_1));
         assertEquals("changedTitle", taskService.updateTaskById("placeholderJwt", 1L, taskRequest).getTitle());
         assertEquals("changedDescription", taskService.updateTaskById("placeholderJwt", 1L, taskRequest).getDescription());

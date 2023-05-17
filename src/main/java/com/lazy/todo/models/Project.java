@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -30,11 +30,11 @@ public class Project {
 
     private String description;
 
-    private Date startDate;
+    private LocalDate startLocalDate;
 
-    private Date targetDate;
+    private LocalDate targetLocalDate;
 
-    private Date checked;
+    private LocalDate checked;
 
     public Project(String title, String description) {
         this.title= title;
@@ -48,8 +48,4 @@ public class Project {
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
 }

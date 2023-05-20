@@ -1,5 +1,4 @@
 package com.lazy.todo;
-
 import com.google.gson.Gson;
 import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
@@ -13,10 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
 import javax.transaction.Transactional;
 import java.util.Date;
-
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

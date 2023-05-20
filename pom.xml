@@ -9,11 +9,11 @@
 		<version>2.7.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.bezkoder</groupId>
-	<artifactId>spring-boot-security-jwt</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-security-jwt</name>
-	<description>Demo project for Spring Boot Security - JWT</description>
+	<groupId>com.lazy</groupId>
+	<artifactId>spring-boot-lazy-todo</artifactId>
+	<version>0.1.1-SNAPSHOT</version>
+	<name>spring-boot-lazy-todo</name>
+	<description>Backend for das lazy kompany todo app</description>
 
 	<properties>
 		<java.version>1.8</java.version>

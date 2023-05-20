@@ -37,4 +37,12 @@ public class UserService {
         return passwordResetTokenRepository.save(new PasswordResetToken(token, user, LocalDateTime.now().plusMinutes(30)));
     }
 
+    public String deleteUser(String jwt) throws  UsernameNotFoundException {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username " + username));
+        userRepository.delete(user);
+        return username + " successfully deleted";
+    }
+
 }

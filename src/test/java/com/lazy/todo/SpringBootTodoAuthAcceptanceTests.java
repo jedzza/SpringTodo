@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -24,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,6 +56,7 @@ public class SpringBootTodoAuthAcceptanceTests {
 
 	@Value("${lazy.app.jwtExpirationMs}")
 	private int jwtExpirationMs;
+
 
 	TaskRequest taskRequest = new TaskRequest("title3", "description3");
 	SignupRequest signupRequest = new SignupRequest("testUser1", "test@test1.com", "password");
@@ -119,5 +122,27 @@ on a first install, this test will fail as testuser2 will be added to the databa
 				.andExpect(status().isOk())
 				.andReturn().getResponse().getContentAsString();
 
+	}
+	@Test
+	@Order(4)
+	@Transactional
+	@WithMockUser(username = "testUser2")
+	public void deleteTest() throws Exception {
+		mockMvc.perform(
+						delete("/api/account")
+								.contentType(MediaType.APPLICATION_JSON)
+								.header("Authorization", "bearer:" + generateJwtToken())
+								.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString();
+		mockMvc.perform(
+						delete("/api/account")
+								.contentType(MediaType.APPLICATION_JSON)
+								.header("Authorization", "bearer:" + generateJwtToken())
+								.accept(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isNoContent())
+				.andReturn().getResponse().getContentAsString();
 	}
 }

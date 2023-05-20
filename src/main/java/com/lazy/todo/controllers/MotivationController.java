@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,6 +28,7 @@ public class MotivationController {
     private String apiUrl;
 
     @GetMapping("/congratulate")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> chatGptCongratulate(@RequestBody Motivation motivation) {
         // create a request
         String prompt = String.format(
@@ -45,6 +47,7 @@ public class MotivationController {
     }
 
     @GetMapping("/encourage")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> chatGptEncourage(@RequestBody Motivation motivation) {
         // create a request
         String prompt = String.format(

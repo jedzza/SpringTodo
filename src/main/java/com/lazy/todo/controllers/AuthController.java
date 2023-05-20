@@ -43,6 +43,7 @@ public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;
 
+
   @Autowired
   UserRepository userRepository;
 
@@ -134,5 +135,4 @@ public class AuthController {
     }
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("internal server error");
   }
-
 }

@@ -85,7 +85,7 @@ public class SpringBootTodoTaskAcceptanceTests {
 
     /**
      * KLUDGE!!! have manually entered a task here which fits this test requirement LIABLE TO BREAK
-     * TODO setup/teardown of database programmatically
+     * TODO add database setup instructions to readme
      *
      * @throws Exception
      */

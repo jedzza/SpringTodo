@@ -214,4 +214,13 @@ class ProjectServiceUnitTest {
         when(projectRepository.findById(2l)).thenReturn(Optional.ofNullable(PROJECT_2));
         assertThrows(AccessDeniedException.class, () -> projectService.deleteProjectById("placeholderJwt", 2l));
     }
+
+//    @Test
+//    void addTaskToProjectTest() {
+//        USER_1.setProjects(projectList);
+//        when(jwtUtils.getUserNameFromJwtToken("placeholderJwt")).thenReturn(USER_1.getUsername());
+//        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER_1));
+//        when(projectRepository.findById(1L)).thenReturn(Optional.ofNullable(PROJECT_1));
+//        assertEquals();
+//    }
 }

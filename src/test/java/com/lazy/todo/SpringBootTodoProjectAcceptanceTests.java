@@ -2,6 +2,7 @@ package com.lazy.todo;
 
 import com.google.gson.Gson;
 import com.lazy.todo.payload.request.ProjectRequest;
+import com.lazy.todo.payload.request.TaskRequest;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,8 @@ public class SpringBootTodoProjectAcceptanceTests {
 
     ProjectRequest PROJECT_REQUEST_1 = new ProjectRequest("testTitle", "testDescription");
     ProjectRequest PROJECT_REQUEST_2 = new ProjectRequest("testTitle2", "testDescription2");
+
+    TaskRequest TASK_REQUEST_1 = new TaskRequest("taskTitle", "taskDescription");
 
 
     @Value("${lazy.app.jwtSecret}")
@@ -156,4 +159,19 @@ public class SpringBootTodoProjectAcceptanceTests {
                 .andExpect(status().isNoContent())
                 .andReturn().getResponse().getContentAsString();
     }
+    @Test
+    @Transactional
+    @WithMockUser(username = "testUser2")
+    public void addTaskToProjectTest() throws Exception {
+        mockMvc.perform(
+                        put("/api/project/addTask/2")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "bearer:" + generateJwtToken())
+                                .content(gson.toJson(TASK_REQUEST_1))
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tasks.[0].title", is(TASK_REQUEST_1.getTitle())))
+                .andReturn().getResponse().getContentAsString();
+        }
 }

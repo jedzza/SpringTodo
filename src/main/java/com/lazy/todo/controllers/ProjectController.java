@@ -4,6 +4,7 @@ import com.lazy.todo.exceptions.AccessDeniedException;
 import com.lazy.todo.exceptions.NoSuchProjectException;
 import com.lazy.todo.exceptions.NoSuchTaskException;
 import com.lazy.todo.payload.request.ProjectRequest;
+import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.payload.response.MessageResponse;
 import com.lazy.todo.repository.ProjectRepository;
 import com.lazy.todo.repository.UserRepository;
@@ -108,7 +109,29 @@ public class ProjectController {
             }
         }
         return ResponseEntity
-                .badRequest().body(new MessageResponse("JWT authetication error"));
+                .badRequest().body(new MessageResponse("JWT authentication error"));
+    }
+
+    /**
+     * Accept a Taskrequest, add task to a project
+     */
+    @PutMapping("/addTask/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> addTaskToProject(@PathVariable("id") Long id,
+                                              @RequestHeader(name = "Authorization") String token,
+                                              @RequestBody TaskRequest taskRequest){
+        String jwt = token.substring(7);
+        if (jwtUtils.validateJwtToken(jwt)) {
+            try {
+                return ResponseEntity.ok(projectService.addTaskToProject(jwt, id, taskRequest));
+            } catch (NoSuchProjectException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            }
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authentication error"));
     }
 
 }

@@ -7,6 +7,7 @@ import com.lazy.todo.models.Project;
 import com.lazy.todo.models.Task;
 import com.lazy.todo.models.User;
 import com.lazy.todo.payload.request.ProjectRequest;
+import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.repository.ProjectRepository;
 import com.lazy.todo.repository.UserRepository;
 import com.lazy.todo.security.jwt.JwtUtils;
@@ -94,5 +95,20 @@ public class ProjectService {
         }
         projectRepository.delete(id);
         return deletedProject;
+    }
+
+    public Project addTaskToProject(String jwt, Long projectId, TaskRequest taskRequest) throws NoSuchProjectException, AccessDeniedException {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with userame: " + username));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchProjectException("No Project found with id " + projectId));
+        if (!user.getProjects().contains(project)){
+            throw new AccessDeniedException("You don't have access to this project");
+        }
+        Task task = taskService.saveNewTask(jwt, taskRequest);
+        project.getTasks().add(task);
+        projectRepository.save(project);
+        return project;
     }
 }

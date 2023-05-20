@@ -24,11 +24,15 @@ public class TaskController {
     @Autowired
     JwtUtils jwtUtils;
 
-
     @Autowired
     TaskService taskService;
 
-
+    /**
+     * Save a new task to the DB, and assign it to the user associated with the JWT token
+     * @param token
+     * @param taskRequest
+     * @return ResponseEntity
+     */
     @PostMapping("/new")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> newTasks(@RequestHeader(name = "Authorization") String token,
@@ -40,6 +44,13 @@ public class TaskController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+
+    /**
+     * Returns the task object associated with the given ID
+     * @param id
+     * @param token
+     * @return ResponseEntity
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> getTaskById(@PathVariable("id") Long id, @RequestHeader(name = "Authorization") String token) {
@@ -63,6 +74,12 @@ public class TaskController {
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
 
+    /**
+     * Returns all the tasks associated with the user - user identiy is determined from the JWT
+     * @param token
+     * @return ResponseEntity
+     */
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> getAllTasks(@RequestHeader(name = "Authorization") String token) {
@@ -75,6 +92,13 @@ public class TaskController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+
+    /**
+     * returns the usernames of all Users who are assigned the task with the id given as a path variable
+     * @param id
+     * @param token
+     * @return ResponseEntity
+     */
 
     @GetMapping("/users/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -94,6 +118,14 @@ public class TaskController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+
+    /**
+     * Update a task, identified by the pathvariable ID, change to the values provided in the taskRequest body
+     * @param id
+     * @param token
+     * @param taskRequest
+     * @return
+     */
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -115,6 +147,14 @@ public class TaskController {
                 .badRequest().body(new MessageResponse("JWT authetication error"));
     }
 
+    /**
+     * delete the task identified with the id provided in the path
+     * @param id
+     * @param token
+     * @return
+     */
+
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteTask(@PathVariable("id") Long id,
@@ -123,7 +163,7 @@ public class TaskController {
         String jwt = token.substring(7);
         if (jwtUtils.validateJwtToken(jwt) && jwt != null){
             try {
-                return ResponseEntity.ok(taskService.deleteTaskById(jwt, id) + " deleted");
+                return ResponseEntity.ok(taskService.deleteTaskById(jwt, id));
             } catch (AccessDeniedException e) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
             } catch (NoSuchTaskException e) {

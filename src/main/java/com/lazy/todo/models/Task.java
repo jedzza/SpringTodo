@@ -9,8 +9,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,11 +32,11 @@ public class Task {
 
     private String description;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime targetDate;
+    private LocalDate targetDate;
 
-    private LocalDateTime checked;
+    private LocalDate checked;
 
 
     @JsonIgnore
@@ -55,7 +55,7 @@ public class Task {
 
 
     //define a constructor here to allow for creation of "headless" task without a project
-    public Task(LocalDateTime startDate, LocalDateTime targetDate, LocalDateTime checked, String title, String description){
+    public Task(LocalDate startDate, LocalDate targetDate, LocalDate checked, String title, String description){
         this.startDate = startDate;
         this.targetDate = targetDate;
         this.checked = checked;

@@ -8,7 +8,7 @@ import lombok.*;
 import javax.swing.plaf.PanelUI;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 //the purpose of this task is to expose to the user those fields we wish them to be able to edit inside the Project POJO
@@ -25,11 +25,11 @@ public class ProjectRequest {
 
     private String description;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime targetDate;
+    private LocalDate targetDate;
 
-    private LocalDateTime checked;
+    private LocalDate checked;
 
     public ProjectRequest(String title, String description) {
         this.title = title;

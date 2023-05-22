@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.TransactionScoped;
@@ -35,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class SpringBootTodoTaskAcceptanceTests {
 
     @Autowired
@@ -97,7 +99,6 @@ public class SpringBootTodoTaskAcceptanceTests {
                         get("/api/task/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", jwt)
-                                .content(gson.toJson(taskRequest))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -117,11 +118,11 @@ public class SpringBootTodoTaskAcceptanceTests {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].title", oneOf("title", "title3",
+                .andExpect(jsonPath("$.[0].title", oneOf("title1", "title3",
                         "title4", "title2")))
-                .andExpect(jsonPath("$.[1].title", oneOf("title", "title3",
+                .andExpect(jsonPath("$.[1].title", oneOf("title1", "title3",
                         "title4", "title2")))
-                .andExpect(jsonPath("$.[2].title", oneOf("title", "title3",
+                .andExpect(jsonPath("$.[2].title", oneOf("title1", "title3",
                         "title4", "title2")))
                 .andReturn().getResponse().getContentAsString();
     }
@@ -173,7 +174,7 @@ public class SpringBootTodoTaskAcceptanceTests {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is(taskRequest.getTitle())))
+                .andExpect(jsonPath("$.title", is(TASK_1.getTitle())))
                 .andReturn().getResponse().getContentAsString();
     }
 

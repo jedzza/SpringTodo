@@ -79,19 +79,19 @@ database chosen has the appropriate content:
     INSERT INTO `{your schema name here}`.`users` (`id`, `email`, `password`, `username`) VALUES ('2', 'test@test2.com', 'asdsad', 'testUser2');
 
 ### Tasks setup
-    INSERT INTO `todo_test`.`tasks` (`id`, `description`, `title`) VALUES ('1', 'testDescription1', 'testTitle1');
-    INSERT INTO `todo_test`.`tasks` (`id`, `description`, `title`) VALUES ('2', 'testDescription2', 'testTitle2');
-    INSERT INTO `todo_test`.`tasks` (`id`, `description`, `title`) VALUES ('3', 'testDescription3', 'testTitle3');
-    INSERT INTO `todo_test`.`tasks` (`id`, `description`, `title`) VALUES ('4', 'testDescription4', 'testTitle4');
+    INSERT INTO `{your schema name here}`.`tasks` (`id`, `description`, `title`) VALUES ('1', 'testDescription1', 'testTitle1');
+    INSERT INTO `{your schema name here}`.`tasks` (`id`, `description`, `title`) VALUES ('2', 'testDescription2', 'testTitle2');
+    INSERT INTO `{your schema name here}`.`tasks` (`id`, `description`, `title`) VALUES ('3', 'testDescription3', 'testTitle3');
+    INSERT INTO `{your schema name here}`.`tasks` (`id`, `description`, `title`) VALUES ('4', 'testDescription4', 'testTitle4');
 
 ### Projects setup
-    INSERT INTO `todo_test`.`projects` (`id`, `description`,`title`, `owner_id`) VALUES ('1', 'testDescription1', 'testTitle1', '1');
+    INSERT INTO `{your schema name here}`.`projects` (`id`, `description`,`title`, `owner_id`) VALUES ('1', 'testDescription1', 'testTitle1', '1');
 
 ### Assign tasks to users
-    INSERT INTO `{schema}`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '1');
-    INSERT INTO `todo_test`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '2');
-    INSERT INTO `todo_test`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '3');
-    INSERT INTO `todo_test`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '4');
+    INSERT INTO `{your schema name here}`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '1');
+    INSERT INTO `{your schema name here}`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '2');
+    INSERT INTO `{your schema name here}`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '3');
+    INSERT INTO `{your schema name here}`.`user_tasks` (`user_id`, `task_id`) VALUES ('1', '4');
 
 
 ## Docker

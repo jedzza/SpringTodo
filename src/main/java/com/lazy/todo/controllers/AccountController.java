@@ -20,6 +20,7 @@ public class AccountController {
     @DeleteMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteAccount (@RequestHeader(name = "Authorization") String token) {
+        //remove "bearer:" from the authorization token, leaving just the actual token
         String jwt = token.substring(7);
         try {
             return ResponseEntity.ok(userService.deleteUser(jwt));

@@ -59,7 +59,7 @@ public class SpringBootTodoAuthAcceptanceTests {
 
 
 	TaskRequest taskRequest = new TaskRequest("title3", "description3");
-	SignupRequest signupRequest = new SignupRequest("testUser1", "test@test1.com", "password");
+	SignupRequest signupRequest = new SignupRequest("testUser3", "test@test3.com", "password");
 	SignupRequest signupRequest2 = new SignupRequest("testUser2", "test@test.com", "password");
 
 	LoginRequest loginRequest = new LoginRequest("testUser2", "password");

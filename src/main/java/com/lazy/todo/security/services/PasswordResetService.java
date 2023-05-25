@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static java.lang.Math.abs;
 import static org.apache.tomcat.util.http.fileupload.util.Streams.asString;
@@ -50,19 +51,26 @@ public class PasswordResetService {
     private SecureRandom secureRandom = new SecureRandom();
 
     public boolean generatePasswordResetToken(PasswordResetRequest passwordResetRequest) throws UsernameNotFoundException{
-        String token = Integer.toString(abs(secureRandom.nextInt()));
+        //generate the token
+        String token = UUID.randomUUID().toString();
+
+        //generate HTML for the reset email
         String emailBody = null;
         try {
             emailBody = asString(emailHtml.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(token);
+
+        //find the user requesting the reset
         User user = userRepository.findByEmail(passwordResetRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("No user with email " + passwordResetRequest.getEmail()));
+
+        //save the token
         passwordResetTokenRepository.save(new PasswordResetToken(token, user, LocalDateTime.now().plusMinutes(30)));
+
+        //send an email containing the reset code
         emailBody = String.format(emailBody, user.getUsername(), token);
-        System.out.println(emailBody);
         EmailResponse emailResponse = new EmailResponse(user.getEmail(), emailBody, "password reset");
         try {
             emailService.sendEmail(emailResponse);

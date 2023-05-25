@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 
+//this allows us to adapt LocalDates to and from JSON for serialization, here we create the relevant bean
 @Configuration
 public class GsonConfig {
 

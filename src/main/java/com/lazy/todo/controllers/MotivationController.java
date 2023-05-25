@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+//this controller allows us to accesss OpenAPI to get motivation or congratulations for completing tasks
 @RestController
 @RequestMapping("/api/motivation")
 public class MotivationController {

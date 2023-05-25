@@ -32,10 +32,10 @@ public class SpringBootTodoProjectAcceptanceTests {
     @Autowired
     Gson gson;
 
-    ProjectRequest PROJECT_REQUEST_1 = new ProjectRequest("testTitle", "testDescription");
+    ProjectRequest PROJECT_REQUEST_1 = new ProjectRequest("testTitle1", "testDescription1");
     ProjectRequest PROJECT_REQUEST_2 = new ProjectRequest("testTitle2", "testDescription2");
 
-    TaskRequest TASK_REQUEST_1 = new TaskRequest("taskTitle", "taskDescription");
+    TaskRequest TASK_REQUEST_1 = new TaskRequest("taskTitle1", "taskDescription1");
 
 
     @Value("${lazy.app.jwtSecret}")
@@ -47,7 +47,7 @@ public class SpringBootTodoProjectAcceptanceTests {
     public String generateJwtToken() {
 
         return Jwts.builder()
-                .setSubject(("testUser2"))
+                .setSubject(("testUser1"))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -56,7 +56,7 @@ public class SpringBootTodoProjectAcceptanceTests {
 
     @Test
     @Transactional
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void newTaskTest() throws Exception {
         mockMvc.perform(
                         post("/api/project/new")
@@ -71,10 +71,10 @@ public class SpringBootTodoProjectAcceptanceTests {
     }
 
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void getProjectByIdTest() throws Exception {
         mockMvc.perform(
-                        get("/api/project/2")
+                        get("/api/project/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .accept(MediaType.APPLICATION_JSON))
@@ -85,7 +85,7 @@ public class SpringBootTodoProjectAcceptanceTests {
     }
 
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void getAllProjectsTest() throws Exception {
         mockMvc.perform(
                         get("/api/project/all")
@@ -100,11 +100,11 @@ public class SpringBootTodoProjectAcceptanceTests {
 
     @Test
     @Transactional
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void updateProjectByIdTest() throws Exception {
         //check that the project is the expected initial values
         mockMvc.perform(
-                        get("/api/project/2")
+                        get("/api/project/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .accept(MediaType.APPLICATION_JSON))
@@ -114,7 +114,7 @@ public class SpringBootTodoProjectAcceptanceTests {
                 .andReturn().getResponse().getContentAsString();
         //change the values
         mockMvc.perform(
-                        put("/api/project/2")
+                        put("/api/project/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .content(gson.toJson(PROJECT_REQUEST_2))
@@ -125,7 +125,7 @@ public class SpringBootTodoProjectAcceptanceTests {
                 .andReturn().getResponse().getContentAsString();
         //check the values have changed properly
         mockMvc.perform(
-                        get("/api/project/2")
+                        get("/api/project/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .accept(MediaType.APPLICATION_JSON))
@@ -136,11 +136,11 @@ public class SpringBootTodoProjectAcceptanceTests {
     }
     @Test
     @Transactional
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void deleteProjectByIdTest() throws Exception {
         //start with a delete request and check that the expected task is returned
         mockMvc.perform(
-                        delete("/api/project/2")
+                        delete("/api/project/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .accept(MediaType.APPLICATION_JSON))
@@ -150,7 +150,7 @@ public class SpringBootTodoProjectAcceptanceTests {
                 .andReturn().getResponse().getContentAsString();
         //request the deleted task to verify it no longer exists
         mockMvc.perform(
-                        get("/api/project/2")
+                        get("/api/project/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .accept(MediaType.APPLICATION_JSON))
@@ -160,10 +160,10 @@ public class SpringBootTodoProjectAcceptanceTests {
     }
     @Test
     @Transactional
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void addTaskToProjectTest() throws Exception {
         mockMvc.perform(
-                        put("/api/project/addTask/2")
+                        put("/api/project/addTask/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .content(gson.toJson(TASK_REQUEST_1))

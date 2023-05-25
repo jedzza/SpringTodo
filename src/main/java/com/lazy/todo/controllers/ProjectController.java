@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+//this class to controll all actions to do with projects - projects contain tasks
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/project")
@@ -27,10 +28,12 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
+    //create a new project
     @PostMapping("/new")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> newProject(@RequestHeader(name = "Authorization") String token,
                                         @RequestBody ProjectRequest projectRequest) {
+        //as elsewhere, trim "bearer:"
         String jwt = token.substring(7);
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
             return ResponseEntity

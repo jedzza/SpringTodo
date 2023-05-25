@@ -59,6 +59,7 @@ public class AuthController {
   @Autowired
   PasswordResetService passwordResetService;
 
+  //return a JWT token if authentication is successful
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -80,6 +81,7 @@ public class AuthController {
                          roles));
   }
 
+  //register a new accoung
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -112,6 +114,7 @@ public class AuthController {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
+  //requesst a new password reset token which will allow you to access "/resetpassword" (see below)
   @PostMapping("/requestresetpassword")
   public ResponseEntity<?> requestResetPassword (@RequestBody PasswordResetRequest passwordResetRequest){
     try {
@@ -124,8 +127,9 @@ public class AuthController {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("internal server error");
   }
 
-  @PostMapping("/resetpassword")
-  public ResponseEntity<?> resetPassword (@RequestBody NewPasswordRequest passwordResetRequest){
+  //Reset passwords if token is valid
+  @PostMapping("/resetPassword")
+  public ResponseEntity<?> resetPassword (@ModelAttribute NewPasswordRequest passwordResetRequest){
     try {
       if (passwordResetService.validatePasswordResetRequest(passwordResetRequest)) {
         return ResponseEntity.ok("Password successfully reset");

@@ -37,6 +37,7 @@ public class TaskController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> newTasks(@RequestHeader(name = "Authorization") String token,
                                       @RequestBody TaskRequest taskRequest) {
+        //as elsewhere, trim "bearer:"
         String jwt = token.substring(7);
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
             return ResponseEntity.ok(taskService.saveNewTask(jwt, taskRequest));

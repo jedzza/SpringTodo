@@ -51,18 +51,18 @@ public class SpringBootTodoTaskAcceptanceTests {
     @Value("${lazy.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    TaskRequest taskRequest = new TaskRequest("title", "description");
-    TaskRequest TASK_REQUEST_2 = new TaskRequest("title2", "description2");
+    TaskRequest taskRequest = new TaskRequest("testTitle1", "testDescription1");
+    TaskRequest TASK_REQUEST_2 = new TaskRequest("testTitle1", "testDescription2");
 
-    Task TASK_1 = new Task("title1", "description1");
-    Task TASK_2 = new Task("title2", "description2");
-    Task TASK_3 = new Task("title3", "description3");
-    Task TASK_4 = new Task("title4", "description4");
+    Task TASK_1 = new Task("testTitle1", "testDescription1");
+    Task TASK_2 = new Task("testTitle2", "testDescription2");
+    Task TASK_3 = new Task("testTitle3", "testDescription3");
+    Task TASK_4 = new Task("testTitle4", "testDescription4");
 
     public String generateJwtToken() {
 
         return Jwts.builder()
-                .setSubject(("testUser2"))
+                .setSubject(("testUser1"))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -71,7 +71,7 @@ public class SpringBootTodoTaskAcceptanceTests {
 
     @Test
     @Transactional
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void newTaskTest() throws Exception {
         mockMvc.perform(
                         post("/api/task/new")
@@ -85,14 +85,8 @@ public class SpringBootTodoTaskAcceptanceTests {
                 .andReturn().getResponse().getContentAsString();
     }
 
-    /**
-     * KLUDGE!!! have manually entered a task here which fits this test requirement LIABLE TO BREAK
-     * TODO add database setup instructions to readme
-     *
-     * @throws Exception
-     */
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void getTaskByIdTest() throws Exception {
         String jwt = "bearer:" + generateJwtToken();
         mockMvc.perform(
@@ -107,7 +101,7 @@ public class SpringBootTodoTaskAcceptanceTests {
     }
 
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void getAllTasksTest() throws Exception {
         String jwt = "bearer:" + generateJwtToken();
         mockMvc.perform(
@@ -118,18 +112,18 @@ public class SpringBootTodoTaskAcceptanceTests {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].title", oneOf("title1", "title3",
-                        "title4", "title2")))
-                .andExpect(jsonPath("$.[1].title", oneOf("title1", "title3",
-                        "title4", "title2")))
-                .andExpect(jsonPath("$.[2].title", oneOf("title1", "title3",
-                        "title4", "title2")))
+                .andExpect(jsonPath("$.[0].title", oneOf("testTitle1", "testTitle3",
+                        "testTitle4", "testTitle2")))
+                .andExpect(jsonPath("$.[1].title", oneOf("testTitle1", "testTitle3",
+                        "testTitle4", "testTitle2")))
+                .andExpect(jsonPath("$.[2].title", oneOf("testTitle1", "testTitle3",
+                        "testTitle4", "testTitle2")))
                 .andReturn().getResponse().getContentAsString();
     }
 
 
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     public void getTaskUsersTest() throws Exception {
         String jwt = "bearer:" + generateJwtToken();
         mockMvc.perform(
@@ -140,12 +134,12 @@ public class SpringBootTodoTaskAcceptanceTests {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0]", is("testUser2")))
+                .andExpect(jsonPath("$.[0]", is("testUser1")))
                 .andReturn().getResponse().getContentAsString();
     }
 
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     @Transactional
     public void getUpdateTaskTest() throws Exception {
         String jwt = "bearer:" + generateJwtToken();
@@ -162,7 +156,7 @@ public class SpringBootTodoTaskAcceptanceTests {
     }
 
     @Test
-    @WithMockUser(username = "testUser2")
+    @WithMockUser(username = "testUser1")
     @Transactional
     public void deleteTaskTest() throws Exception {
         String jwt = "bearer:" + generateJwtToken();

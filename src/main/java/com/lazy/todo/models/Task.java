@@ -26,7 +26,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+
     @Size(max = 100)
     private String title;
 

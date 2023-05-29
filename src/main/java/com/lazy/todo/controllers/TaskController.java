@@ -148,6 +148,42 @@ public class TaskController {
                 .badRequest().body(new MessageResponse("JWT authetication error"));
     }
 
+    @PutMapping("/complete/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> completeTask(@PathVariable("id") Long id,
+                                        @RequestHeader(name = "Authorization") String token) {
+        String jwt = token.substring(7);
+        if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
+            try {
+                return ResponseEntity.ok(taskService.completeTask(jwt, id));
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            } catch (NoSuchTaskException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            }
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authetication error"));
+    }
+
+    @PutMapping("/unComplete/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> unCompleteTask(@PathVariable("id") Long id,
+                                          @RequestHeader(name = "Authorization") String token) {
+        String jwt = token.substring(7);
+        if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
+            try {
+                return ResponseEntity.ok(taskService.unCompleteTask(jwt, id));
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            } catch (NoSuchTaskException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            }
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authetication error"));
+    }
+
     /**
      * delete the task identified with the id provided in the path
      * @param id

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +57,32 @@ public class TaskService {
         User user =userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
         return user.getTasks();
+    }
+
+    public Task completeTask(String jwt, Long id) throws NoSuchTaskException, AccessDeniedException {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchTaskException("Task Not Found with task id " + id));
+        if (!user.getTasks().contains(task)) {
+            throw new AccessDeniedException("you do not have access to this task");
+        }
+        task.setChecked(LocalDate.now());
+        return taskRepository.save(task);
+    }
+
+    public Task unCompleteTask(String jwt, Long id) throws NoSuchTaskException, AccessDeniedException {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchTaskException("Task Not Found with task id " + id));
+        if (!user.getTasks().contains(task)) {
+            throw new AccessDeniedException("you do not have access to this task");
+        }
+        task.setChecked(null);
+        return taskRepository.save(task);
     }
 
     public Set<String> getTaskUsers(String jwt, Long id) throws AccessDeniedException, NoSuchTaskException {

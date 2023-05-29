@@ -40,6 +40,10 @@ public class Task {
 
     private LocalDate checked;
 
+    private int priority;
+
+    private int projectPriority;
+
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

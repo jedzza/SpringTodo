@@ -6,6 +6,7 @@ import com.lazy.todo.models.Task;
 import com.lazy.todo.models.User;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.security.jwt.JwtUtils;
+import com.lazy.todo.services.AccountService;
 import com.lazy.todo.services.TaskService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ class TaskControllerUnitTest {
 
     @MockBean
     JwtUtils jwtUtils;
+
+    @MockBean
+    AccountService accountService;
 
     Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
     Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");

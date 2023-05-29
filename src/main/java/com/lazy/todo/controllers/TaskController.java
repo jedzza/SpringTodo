@@ -8,6 +8,7 @@ import com.lazy.todo.payload.response.MessageResponse;
 import com.lazy.todo.repository.TaskRepository;
 import com.lazy.todo.repository.UserRepository;
 import com.lazy.todo.security.jwt.JwtUtils;
+import com.lazy.todo.services.AccountService;
 import com.lazy.todo.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,9 @@ public class TaskController {
 
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    AccountService accountService;
 
     /**
      * Save a new task to the DB, and assign it to the user associated with the JWT token
@@ -51,8 +55,8 @@ public class TaskController {
 
         String jwt = token.substring(7);
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-            System.out.println(taskService.getScore(jwt));
-            return ResponseEntity.ok(taskService.getScore(jwt));
+            System.out.println(accountService.getScore(jwt));
+            return ResponseEntity.ok(accountService.getScore(jwt));
         }
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));

@@ -14,6 +14,16 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+@NamedNativeQuery(name = "User.scoreCount",
+        query = "SELECT Count(*)\n" +
+                "FROM defaultdb.user_tasks ut \n" +
+                "\tINNER JOIN defaultdb.users u\n" +
+                "\t\tON ut.user_id = u.id\n" +
+                "\tINNER JOIN defaultdb.tasks t\n" +
+                "\t\tON ut.task_id = t.id\n" +
+                "WHERE t.checked > (NOW() - INTERVAL 1 YEAR)\n" +
+                "AND u.id = ?;")
+
 
 @AllArgsConstructor
 @NoArgsConstructor

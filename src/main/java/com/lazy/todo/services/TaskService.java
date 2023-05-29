@@ -13,12 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
 public class TaskService {
+
+    @Autowired
+    EntityManager entityManager;
 
     @Autowired
     TaskRepository taskRepository;
@@ -83,6 +89,15 @@ public class TaskService {
         }
         task.setChecked(null);
         return taskRepository.save(task);
+    }
+
+    public List<Integer> getScore(String jwt) {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Query q = entityManager.createNamedQuery("User.scoreCount");
+        q.setParameter(1, user.getId());
+        return (List<Integer>) q.getResultList();
     }
 
     public Set<String> getTaskUsers(String jwt, Long id) throws AccessDeniedException, NoSuchTaskException {

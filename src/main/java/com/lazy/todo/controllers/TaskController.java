@@ -45,6 +45,18 @@ public class TaskController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+    @GetMapping("/score")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getScore(@RequestHeader(name = "Authorization") String token) {
+
+        String jwt = token.substring(7);
+        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            System.out.println(taskService.getScore(jwt));
+            return ResponseEntity.ok(taskService.getScore(jwt));
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authentication error"));
+    }
 
     /**
      * Returns the task object associated with the given ID

@@ -21,4 +21,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query("delete from Task t where t.id = ?1")
     void delete(Long entityId);
+
 }

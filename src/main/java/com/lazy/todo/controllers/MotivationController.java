@@ -4,12 +4,14 @@ package com.lazy.todo.controllers;
 import com.lazy.todo.models.Motivation;
 import com.lazy.todo.payload.request.MotivationRequest;
 import com.lazy.todo.payload.response.MotivationResponse;
+import com.lazy.todo.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +30,10 @@ public class MotivationController {
     @Value("${openai.api.url}")
     private String apiUrl;
 
-    @GetMapping("/congratulate")
+    @Autowired
+    AccountService accountService;
+
+    @PostMapping("/congratulate")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> chatGptCongratulate(@RequestBody Motivation motivation) {
         // create a request
@@ -47,7 +52,7 @@ public class MotivationController {
         return ResponseEntity.ok(response.getChoices().get(0).getMessage().getContent());
     }
 
-    @GetMapping("/encourage")
+    @PostMapping("/encourage")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> chatGptEncourage(@RequestBody Motivation motivation) {
         // create a request
@@ -64,6 +69,22 @@ public class MotivationController {
 
         // return the first response
         return ResponseEntity.ok(response.getChoices().get(0).getMessage().getContent());
+    }
+
+    //Allow users to change their encouragement personality
+    @PostMapping("/personality/{personality}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> changePersonality(@PathVariable("personality") String personality,
+                                               @RequestHeader(name = "Authorization") String token) {
+        String jwt = token.substring(7);
+        try {
+            return ResponseEntity.ok(accountService.changePersonality(jwt, personality));
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No username found");
+        }
+
+        // return the first response
+
     }
 
 }

@@ -19,10 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -106,7 +103,7 @@ class TaskServiceUnitTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER_1));
         USER_1.getTasks().add(TASK_1);
         USER_1.getTasks().add(TASK_2);
-        Set<Task> tasks = new HashSet<>(Arrays.asList(TASK_1, TASK_2));
+        List<Task> tasks = new ArrayList<>(Arrays.asList(TASK_1, TASK_2));
         assertEquals(tasks, taskService.getAllTasks("placeholderJwt"));
     }
 

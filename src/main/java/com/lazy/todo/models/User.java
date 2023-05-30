@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -66,7 +68,7 @@ public class User {
   @JoinTable(  name = "user_tasks",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "task_id"))
-  private Set<Task> tasks = new HashSet<>();
+  private List<Task> tasks = new ArrayList<Task>();
 
   @OneToMany(mappedBy = "owner",
   cascade = CascadeType.ALL,

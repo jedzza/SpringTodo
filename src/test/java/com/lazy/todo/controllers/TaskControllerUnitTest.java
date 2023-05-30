@@ -97,7 +97,7 @@ class TaskControllerUnitTest {
 
     @Test
     public void getAllTasks() throws Exception {
-        Set<Task> tasks = new HashSet<>(Arrays.asList(TASK_1, TASK_2, TASK_3));
+        List<Task> tasks = new ArrayList<>(Arrays.asList(TASK_1, TASK_2, TASK_3));
         when(taskService.getAllTasks("placeholderJWT")).thenReturn(tasks);
         when(jwtUtils.validateJwtToken("placeholderJWT")).thenReturn(true);
         //check that we correctly return the value given by the taskService

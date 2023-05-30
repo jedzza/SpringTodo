@@ -58,7 +58,7 @@ public class TaskService {
         return task;
         }
 
-    public Set<Task> getAllTasks(String jwt) {
+    public List<Task> getAllTasks(String jwt) {
         String username =jwtUtils.getUserNameFromJwtToken(jwt);
         User user =userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));

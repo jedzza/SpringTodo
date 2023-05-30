@@ -35,6 +35,8 @@ public class Project {
 
     private LocalDate checked;
 
+    private int project;
+
     public Project(String title, String description) {
         this.title= title;
         this.description =description;

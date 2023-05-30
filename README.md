@@ -98,7 +98,7 @@ database chosen has the appropriate content:
 The dockerfile at the root directory of this project should allow for this program
 to be containerised, you simply need to navigate to the root directory and run
 
-     docker build {container name}:{tag} .
+     docker build -t{container name}:{tag} .
 
 And then run via 
     

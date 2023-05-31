@@ -9,6 +9,7 @@ import com.lazy.todo.models.gson.LocalDateAdapter;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.AccountService;
+import com.lazy.todo.services.SortingService;
 import com.lazy.todo.services.TaskService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -57,10 +58,13 @@ class TaskControllerIntegrationTest {
     TaskService taskService;
 
     @MockBean
+    SortingService sortingService;
+
+    @MockBean
     AccountService accountService;
 
-    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
-    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), false, "title1", "description1");
+    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), false, "title2", "description2");
 
     List<Task> TASKS = new ArrayList<>(Arrays.asList(TASK_1,TASK_2));
 

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -43,7 +44,7 @@ public class Project {
     }
 
     @OneToMany(mappedBy = "project")
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

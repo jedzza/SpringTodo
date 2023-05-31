@@ -14,7 +14,17 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-
+@NamedNativeQuery(name = "Task.sortedTasks",
+        query = "SELECT t.id, t.title, t.description, t.checked, t.priority, t.project_priority, t.project_id," +
+                " t.start_date, t.target_date\n" +
+                "FROM defaultdb.user_tasks ut \n" +
+                "\tINNER JOIN defaultdb.users u\n" +
+                "\t\tON ut.user_id = u.id\n" +
+                "\tINNER JOIN defaultdb.tasks t\n" +
+                "\t\tON ut.task_id = t.id\n" +
+                "WHERE (t.completed_on > (NOW() - INTERVAL 1 YEAR) OR t.checked IS NULL)\n" +
+                "AND u.id = ?1\n" +
+                "ORDER BY t.priority;")
 
 @Getter
 @Setter
@@ -38,7 +48,9 @@ public class Task {
 
     private LocalDate targetDate;
 
-    private LocalDate checked;
+    private LocalDate completedOn;
+
+    private Boolean checked;
 
     private int priority;
 
@@ -61,7 +73,7 @@ public class Task {
 
 
     //define a constructor here to allow for creation of "headless" task without a project
-    public Task(LocalDate startDate, LocalDate targetDate, LocalDate checked, String title, String description){
+    public Task(LocalDate startDate, LocalDate targetDate, Boolean checked, String title, String description){
         this.startDate = startDate;
         this.targetDate = targetDate;
         this.checked = checked;

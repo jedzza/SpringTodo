@@ -44,9 +44,9 @@ class TaskServiceUnitTest {
     @MockBean
     EntityManager entityManager;
 
-    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
-    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");
-    Task TASK_3 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title3", "description3");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), false, "title1", "description1");
+    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), false, "title2", "description2");
+    Task TASK_3 = new Task(LocalDate.now(), LocalDate.now(), false, "title3", "description3");
 
     User USER_1 = new User("testUserName1", "test@test.co.uk", "testPassword1");
     User USER_2 = new User("testUserName2", "test@test.com", "testPassword2");

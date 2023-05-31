@@ -9,7 +9,21 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
+
+@NamedNativeQuery(name = "Project.sortedTasks",
+        query = "SELECT t.id, t.title, t.description, t.checked, t.priority, t.project_priority," +
+                " t.start_date, t.target_date\n" +
+                "FROM defaultdb.user_tasks ut \n" +
+                "\tINNER JOIN defaultdb.users u\n" +
+                "\t\tON ut.user_id = u.id\n" +
+                "\tINNER JOIN defaultdb.tasks t\n" +
+                "\t\tON ut.task_id = t.id\n" +
+                "WHERE (t.completed_on > (NOW() - INTERVAL 1 YEAR) OR t.checked IS NULL)\n" +
+                "AND u.id = (?1)" +
+                "AND t.project_id = (?2)\n" +
+                "ORDER BY t.priority")
 
 @Getter
 @Setter
@@ -43,7 +57,7 @@ public class Project {
     }
 
     @OneToMany(mappedBy = "project")
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

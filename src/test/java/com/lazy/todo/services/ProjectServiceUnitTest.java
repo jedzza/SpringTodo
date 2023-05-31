@@ -17,10 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +42,7 @@ class ProjectServiceUnitTest {
     @Autowired
     ProjectService projectService;
 
-    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), false, "title1", "description1");
 
     User USER_1 = new User("testUserName1", "test@test.co.uk", "testPassword1");
 
@@ -57,7 +54,7 @@ class ProjectServiceUnitTest {
 
     Set<Project> projectList = new HashSet<>(Arrays.asList(PROJECT_1));
 
-    Set<Task> tasks = new HashSet<>(Arrays.asList(TASK_1));
+    List<Task> tasks = new ArrayList<>(Arrays.asList(TASK_1));
 
     @Test
     void newProjectTest() {

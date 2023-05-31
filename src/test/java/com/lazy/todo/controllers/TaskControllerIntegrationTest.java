@@ -9,6 +9,7 @@ import com.lazy.todo.models.gson.LocalDateAdapter;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.AccountService;
+import com.lazy.todo.services.SortingService;
 import com.lazy.todo.services.TaskService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -25,10 +26,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -60,12 +58,15 @@ class TaskControllerIntegrationTest {
     TaskService taskService;
 
     @MockBean
+    SortingService sortingService;
+
+    @MockBean
     AccountService accountService;
 
-    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
-    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), false, "title1", "description1");
+    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), false, "title2", "description2");
 
-    Set<Task> TASKS = new HashSet<>(Arrays.asList(TASK_1,TASK_2));
+    List<Task> TASKS = new ArrayList<>(Arrays.asList(TASK_1,TASK_2));
 
     User USER_1 = new User("testusername1", "test@test.co.uk", "testpassword1");
     User USER_2 = new User("testusername2", "test@test.com", "testpassword2");

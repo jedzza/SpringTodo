@@ -17,9 +17,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -58,7 +60,7 @@ public class TaskService {
         return task;
         }
 
-    public Set<Task> getAllTasks(String jwt) {
+    public List<Task> getAllTasks(String jwt) {
         String username =jwtUtils.getUserNameFromJwtToken(jwt);
         User user =userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
@@ -74,7 +76,8 @@ public class TaskService {
         if (!user.getTasks().contains(task)) {
             throw new AccessDeniedException("you do not have access to this task");
         }
-        task.setChecked(LocalDate.now());
+        task.setCompletedOn(LocalDate.now());
+        task.setChecked(true);
         return taskRepository.save(task);
     }
 

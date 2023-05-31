@@ -9,15 +9,22 @@ import com.lazy.todo.models.User;
 import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.repository.ProjectRepository;
+import com.lazy.todo.repository.TaskRepository;
 import com.lazy.todo.repository.UserRepository;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -33,6 +40,9 @@ public class ProjectService {
 
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    TaskRepository taskRepository;
 
     public Project newProject(String jwt, ProjectRequest projectRequest) {
 
@@ -63,6 +73,22 @@ public class ProjectService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
         return user.getProjects();
+    }
+
+    public List<Task> getProjectTasks(String jwt, Long projectId) throws NoSuchProjectException, AccessDeniedException {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchProjectException("no project found with id " + projectId));
+        if (!user.getProjects().contains(project)) {
+            throw new AccessDeniedException("You do not have access to this project");
+        } else {
+            //only send unfinished tasks and those finished today
+            return user.getTasks().stream()
+                    .filter(t -> (t.getCompletedOn().isAfter(LocalDate.now().minusDays(1))
+                            || t.getChecked() == null)).collect(Collectors.toList());
+        }
     }
 
     public Project updateProjectById(String jwt, Long id, ProjectRequest projectRequest) throws NoSuchProjectException, AccessDeniedException {
@@ -106,9 +132,10 @@ public class ProjectService {
         if (!user.getProjects().contains(project)){
             throw new AccessDeniedException("You don't have access to this project");
         }
-        Task task = taskService.saveNewTask(jwt, taskRequest);
-        project.getTasks().add(task);
-        projectRepository.save(project);
+        Task task = new Task();
+        BeanUtils.copyProperties(taskRequest, task,"id");
+        task.setProject(project);
+        taskRepository.save(task);
         return project;
     }
 }

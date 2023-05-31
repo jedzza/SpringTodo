@@ -10,6 +10,7 @@ import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.ProjectService;
+import com.lazy.todo.services.SortingService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ class ProjectControllerUnitTest {
 
     @MockBean
     ProjectService projectService;
+
+    @MockBean
+    SortingService sortingService;
 
     Project PROJECT_1 = new Project("title1", "description1");
     Project PROJECT_2 = new Project("title2", "description2");

@@ -19,10 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -47,9 +44,9 @@ class TaskServiceUnitTest {
     @MockBean
     EntityManager entityManager;
 
-    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title1", "description1");
-    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title2", "description2");
-    Task TASK_3 = new Task(LocalDate.now(), LocalDate.now(), LocalDate.now(), "title3", "description3");
+    Task TASK_1 = new Task(LocalDate.now(), LocalDate.now(), false, "title1", "description1");
+    Task TASK_2 = new Task(LocalDate.now(), LocalDate.now(), false, "title2", "description2");
+    Task TASK_3 = new Task(LocalDate.now(), LocalDate.now(), false, "title3", "description3");
 
     User USER_1 = new User("testUserName1", "test@test.co.uk", "testPassword1");
     User USER_2 = new User("testUserName2", "test@test.com", "testPassword2");
@@ -106,7 +103,7 @@ class TaskServiceUnitTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER_1));
         USER_1.getTasks().add(TASK_1);
         USER_1.getTasks().add(TASK_2);
-        Set<Task> tasks = new HashSet<>(Arrays.asList(TASK_1, TASK_2));
+        List<Task> tasks = new ArrayList<>(Arrays.asList(TASK_1, TASK_2));
         assertEquals(tasks, taskService.getAllTasks("placeholderJwt"));
     }
 

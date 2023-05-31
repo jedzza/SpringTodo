@@ -13,6 +13,7 @@ import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.ProjectService;
+import com.lazy.todo.services.SortingService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ class ProjectControllerIntegrationTest {
 
     @MockBean
     JwtUtils jwtUtils;
+
+    @MockBean
+    SortingService sortingService;
 
     @MockBean
     ProjectService projectService;

@@ -9,11 +9,13 @@ import com.lazy.todo.models.User;
 import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.repository.ProjectRepository;
+import com.lazy.todo.repository.TaskRepository;
 import com.lazy.todo.repository.UserRepository;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class ProjectService {
 
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    TaskRepository taskRepository;
 
     public Project newProject(String jwt, ProjectRequest projectRequest) {
 
@@ -127,9 +132,10 @@ public class ProjectService {
         if (!user.getProjects().contains(project)){
             throw new AccessDeniedException("You don't have access to this project");
         }
-        Task task = taskService.saveNewTask(jwt, taskRequest);
-        project.getTasks().add(task);
-        projectRepository.save(project);
+        Task task = new Task();
+        BeanUtils.copyProperties(taskRequest, task,"id");
+        task.setProject(project);
+        taskRepository.save(task);
         return project;
     }
 }

@@ -10,6 +10,7 @@ import com.lazy.todo.repository.ProjectRepository;
 import com.lazy.todo.repository.UserRepository;
 import com.lazy.todo.security.jwt.JwtUtils;
 import com.lazy.todo.services.ProjectService;
+import com.lazy.todo.services.SortingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class ProjectController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    SortingService sortingService;
 
     @Autowired
     ProjectService projectService;
@@ -70,6 +74,24 @@ public class ProjectController {
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
             return ResponseEntity
                     .ok(projectService.getAllProjectsByUser(jwt));
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authentication error"));
+    }
+    @GetMapping("/tasks/all/current/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAllCurrentProjectTasks(@RequestHeader(name = "Authorization") String token,
+                                                       @PathVariable("id") Long id) {
+
+        String jwt = token.substring(7);
+        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            try {
+                return ResponseEntity.ok(sortingService.getCurrentProjectTasks(jwt, id));
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            } catch (NoSuchProjectException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            }
         }
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));

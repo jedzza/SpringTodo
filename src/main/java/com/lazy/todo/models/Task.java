@@ -23,8 +23,8 @@ import java.util.Set;
                 "\tINNER JOIN defaultdb.tasks t\n" +
                 "\t\tON ut.task_id = t.id\n" +
                 "WHERE (t.completed_on > (NOW() - INTERVAL 1 YEAR) OR t.checked IS NULL)\n" +
-                "AND u.id = ?1\n" +
-                "ORDER BY t.priority;")
+                "\tAND u.id = ?1\n" +
+                "ORDER BY t.priority")
 
 @Getter
 @Setter

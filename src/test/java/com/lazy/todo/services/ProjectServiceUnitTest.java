@@ -7,6 +7,7 @@ import com.lazy.todo.models.Task;
 import com.lazy.todo.models.User;
 import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.repository.ProjectRepository;
+import com.lazy.todo.repository.TaskRepository;
 import com.lazy.todo.repository.UserRepository;
 import com.lazy.todo.security.jwt.JwtUtils;
 import lombok.SneakyThrows;
@@ -35,6 +36,9 @@ class ProjectServiceUnitTest {
 
     @MockBean
     ProjectRepository projectRepository;
+
+    @MockBean
+    TaskRepository taskRepository;
 
     @MockBean
     TaskService taskService;

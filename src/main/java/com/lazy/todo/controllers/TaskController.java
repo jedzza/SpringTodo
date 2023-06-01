@@ -182,6 +182,50 @@ public class TaskController {
                 .badRequest().body(new MessageResponse("JWT authetication error"));
     }
 
+    @PutMapping("/priority/{id}/{priority}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateTaskPriority(@PathVariable("id") Long id,
+                                        @PathVariable("priority") int priority,
+                                        @RequestHeader(name = "Authorization") String token,
+                                        @RequestBody TaskRequest taskRequest) {
+        String jwt = token.substring(7);
+        if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
+            try {
+                return ResponseEntity
+                        .ok(taskService.setTaskPriority(jwt, id, priority));
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            } catch (NoSuchTaskException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            }
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authetication error"));
+    }
+
+    @PutMapping("/project/priority/{id}/{priority}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateTaskProjectPriority(@PathVariable("id") Long id,
+                                                @PathVariable("priority") int priority,
+                                                @RequestHeader(name = "Authorization") String token,
+                                                @RequestBody TaskRequest taskRequest) {
+        String jwt = token.substring(7);
+        if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
+            try {
+                return ResponseEntity
+                        .ok(taskService.setTaskProjectPriority(jwt, id, priority));
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            } catch (NoSuchTaskException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            }
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authetication error"));
+    }
+
+
+
     @PutMapping("/complete/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> completeTask(@PathVariable("id") Long id,

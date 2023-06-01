@@ -94,6 +94,32 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    public Task setTaskPriority(String jwt, Long id, int priority) throws NoSuchTaskException, AccessDeniedException {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchTaskException("Task Not Found with task id " + id));
+        if (!user.getTasks().contains(task)) {
+            throw new AccessDeniedException("you do not have access to this task");
+        }
+        task.setPriority(priority);
+        return taskRepository.save(task);
+    }
+
+    public Task setTaskProjectPriority(String jwt, Long id, int priority) throws NoSuchTaskException, AccessDeniedException {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchTaskException("Task Not Found with task id " + id));
+        if (!user.getTasks().contains(task)) {
+            throw new AccessDeniedException("you do not have access to this task");
+        }
+        task.setProjectPriority(priority);
+        return taskRepository.save(task);
+    }
+
 
     public Set<String> getTaskUsers(String jwt, Long id) throws AccessDeniedException, NoSuchTaskException {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -111,6 +137,7 @@ public class TaskService {
         return usernames;
     }
 
+    //user hthis to update the task wholesale
     public Task updateTaskById(String jwt, Long id, TaskRequest taskRequest) throws NoSuchTaskException, AccessDeniedException {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
         User user = userRepository.findByUsername(username)

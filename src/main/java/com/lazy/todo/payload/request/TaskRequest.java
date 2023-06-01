@@ -29,6 +29,10 @@ public class TaskRequest {
 
     private Project project;
 
+    private int priority;
+
+    private int projectPriority;
+
     public TaskRequest(String title, String description) {
         this.title= title;
         this.description = description;

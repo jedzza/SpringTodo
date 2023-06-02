@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
                 "\tINNER JOIN defaultdb.tasks t\n" +
                 "\t\tON ut.task_id = t.id\n" +
                 "WHERE t.completed_on > (NOW() - INTERVAL 1 YEAR)\n" +
+                "AND t.checked IS NOT NULL\n" +
                 "AND u.id = ?;")
 
 

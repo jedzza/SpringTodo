@@ -4,6 +4,7 @@ import com.lazy.todo.exceptions.AccessDeniedException;
 import com.lazy.todo.exceptions.NoSuchTaskException;
 import com.lazy.todo.models.Task;
 import com.lazy.todo.payload.request.PriorityUpdate;
+import com.lazy.todo.payload.request.PriorityUpdateList;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.payload.response.MessageResponse;
 import com.lazy.todo.repository.TaskRepository;
@@ -189,11 +190,11 @@ public class TaskController {
     @PutMapping("/priority")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> updateTaskPriority(@RequestHeader(name = "Authorization") String token,
-                                                @RequestBody List<PriorityUpdate> updateList) {
+                                                @RequestBody PriorityUpdateList updateList) {
         List<Task> returnTasks = new ArrayList<>();
         String jwt = token.substring(7);
         if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
-            for (PriorityUpdate priorityUpdate: updateList ) {
+            for (PriorityUpdate priorityUpdate: updateList.getPriorityUpdates() ) {
                 try {
                     returnTasks.add(taskService.setTaskPriority(jwt, priorityUpdate.getId(), priorityUpdate.getPriority()));
                 } catch (AccessDeniedException e) {

@@ -24,9 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
@@ -66,7 +64,7 @@ class ProjectControllerIntegrationTest {
     Project PROJECT_2 = new Project("title2", "description2");
     Project PROJECT_3 = new Project("title3", "description3");
 
-    Set<Project> PROJECT_SET = new HashSet<Project>(Arrays.asList(PROJECT_1, PROJECT_2, PROJECT_3));
+    List<Project> PROJECT_LIST = new ArrayList<>(Arrays.asList(PROJECT_1, PROJECT_2, PROJECT_3));
 
     User USER_1 = new User("testusername1", "test@test.co.uk", "testpassword1");
     User USER_2 = new User("testusername2", "test@test.com", "testpassword2");
@@ -110,7 +108,7 @@ class ProjectControllerIntegrationTest {
     @Test
     void getAllProjectsIntegrationTest() throws Exception {
         when(jwtUtils.validateJwtToken("placeholderJwt")).thenReturn(true);
-        when(projectService.getAllProjectsByUser("placeholderJwt")).thenReturn(PROJECT_SET);
+        when(projectService.getAllProjectsByUser("placeholderJwt")).thenReturn(PROJECT_LIST);
         mockMvc.perform(
                         get("/api/project/all")
                                 .contentType(MediaType.APPLICATION_JSON)

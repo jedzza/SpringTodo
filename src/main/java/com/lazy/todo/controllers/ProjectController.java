@@ -3,6 +3,9 @@ package com.lazy.todo.controllers;
 import com.lazy.todo.exceptions.AccessDeniedException;
 import com.lazy.todo.exceptions.NoSuchProjectException;
 import com.lazy.todo.exceptions.NoSuchTaskException;
+import com.lazy.todo.models.Project;
+import com.lazy.todo.models.Task;
+import com.lazy.todo.payload.request.PriorityUpdate;
 import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.payload.response.MessageResponse;
@@ -16,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //this class to controll all actions to do with projects - projects contain tasks
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -96,6 +102,28 @@ public class ProjectController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+    @PutMapping("/priority")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateProjectPriority(@RequestHeader(name = "Authorization") String token,
+                                                       @RequestBody List<PriorityUpdate> updateList) {
+        String jwt = token.substring(7);
+        List <Project> returnProjects = new ArrayList<>();
+        if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
+            for (PriorityUpdate priorityUpdate: updateList)
+            {
+                try {
+                    returnProjects.add(projectService.setProjectPriority(jwt, priorityUpdate.getId(), priorityUpdate.getPriority()));
+                } catch (AccessDeniedException e) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+                } catch (NoSuchTaskException e) {
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+                }
+            }
+            return ResponseEntity.ok(returnProjects);
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authetication error"));
+    }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -116,6 +144,7 @@ public class ProjectController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteProjectById (@PathVariable("id") Long id,

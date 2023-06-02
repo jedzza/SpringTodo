@@ -51,6 +51,8 @@ public class Project {
 
     private int project;
 
+    private int priority;
+
     public Project(String title, String description) {
         this.title= title;
         this.description =description;

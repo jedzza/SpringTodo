@@ -45,7 +45,7 @@ class ProjectControllerUnitTest {
 
     Task TASK_1 = new Task("taskTitle", "taskDescription");
 
-    Set<Project> PROJECT_LIST = new HashSet<Project>(Arrays.asList(PROJECT_1, PROJECT_2, PROJECT_3));
+    List<Project> PROJECT_LIST = new ArrayList<>(Arrays.asList(PROJECT_1, PROJECT_2, PROJECT_3));
 
     User USER_1 = new User("testusername1", "test@test.co.uk", "testpassword1");
     User USER_2 = new User("testusername2", "test@test.com", "testpassword2");

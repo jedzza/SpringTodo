@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,7 @@ public class SortingService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
         Query q = entityManager.createNamedQuery("Task.sortedTasks");
         q.setParameter(1, user.getId());
+        List<Task> returnedTasks = new ArrayList<>();
         return q.getResultList();
     }
 

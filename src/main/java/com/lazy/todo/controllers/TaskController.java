@@ -3,6 +3,7 @@ package com.lazy.todo.controllers;
 import com.lazy.todo.exceptions.AccessDeniedException;
 import com.lazy.todo.exceptions.NoSuchTaskException;
 import com.lazy.todo.models.Task;
+import com.lazy.todo.payload.request.PriorityUpdate;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.payload.response.MessageResponse;
 import com.lazy.todo.repository.TaskRepository;
@@ -17,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -182,43 +186,46 @@ public class TaskController {
                 .badRequest().body(new MessageResponse("JWT authetication error"));
     }
 
-    @PutMapping("/priority/{id}/{priority}")
+    @PutMapping("/priority")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> updateTaskPriority(@PathVariable("id") Long id,
-                                        @PathVariable("priority") int priority,
-                                        @RequestHeader(name = "Authorization") String token,
-                                        @RequestBody TaskRequest taskRequest) {
+    public ResponseEntity<?> updateTaskPriority(@RequestHeader(name = "Authorization") String token,
+                                                @RequestBody List<PriorityUpdate> updateList) {
+        List<Task> returnTasks = new ArrayList<>();
         String jwt = token.substring(7);
         if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
-            try {
-                return ResponseEntity
-                        .ok(taskService.setTaskPriority(jwt, id, priority));
-            } catch (AccessDeniedException e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-            } catch (NoSuchTaskException e) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            for (PriorityUpdate priorityUpdate: updateList ) {
+                try {
+                    returnTasks.add(taskService.setTaskPriority(jwt, priorityUpdate.getId(), priorityUpdate.getPriority()));
+                } catch (AccessDeniedException e) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+                } catch (NoSuchTaskException e) {
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+                }
             }
+            return ResponseEntity.ok(returnTasks);
         }
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authetication error"));
     }
 
-    @PutMapping("/project/priority/{id}/{priority}")
+    @PutMapping("/project/priority")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> updateTaskProjectPriority(@PathVariable("id") Long id,
-                                                @PathVariable("priority") int priority,
-                                                @RequestHeader(name = "Authorization") String token,
-                                                @RequestBody TaskRequest taskRequest) {
+    public ResponseEntity<?> updateTaskProjectPriority(@RequestHeader(name = "Authorization") String token,
+                                                       @RequestBody List<PriorityUpdate> updateList) {
         String jwt = token.substring(7);
+        List <Task> returnTasks = new ArrayList<>();
         if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
-            try {
-                return ResponseEntity
-                        .ok(taskService.setTaskProjectPriority(jwt, id, priority));
-            } catch (AccessDeniedException e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-            } catch (NoSuchTaskException e) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            for (PriorityUpdate priorityUpdate: updateList)
+            {
+                try {
+                    returnTasks.add(taskService.setTaskProjectPriority(jwt, priorityUpdate.getId(), priorityUpdate.getPriority()));
+                } catch (AccessDeniedException e) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+                } catch (NoSuchTaskException e) {
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+                }
             }
+            return ResponseEntity.ok(returnTasks);
         }
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authetication error"));

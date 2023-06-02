@@ -56,7 +56,7 @@ class ProjectServiceUnitTest {
 
     Project PROJECT_2 = new Project("testTitle2", "testDescription2");
 
-    Set<Project> projectList = new HashSet<>(Arrays.asList(PROJECT_1));
+    List<Project> projectList = new ArrayList<>(Arrays.asList(PROJECT_1));
 
     List<Task> tasks = new ArrayList<>(Arrays.asList(TASK_1));
 

@@ -68,10 +68,11 @@ public class ProjectService {
         }
     }
 
-    public Set<Project> getAllProjectsByUser(String jwt) {
+    public List<Project> getAllProjectsByUser(String jwt) {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+        user.getProjects().sort(Comparator.comparing(Project::getPriority));
         return user.getProjects();
     }
 
@@ -104,6 +105,19 @@ public class ProjectService {
         projectRepository.save(updatedProject);
         userRepository.save(user);
         return updatedProject;
+    }
+
+    public Project setProjectPriority(String jwt, Long id, int priority) throws NoSuchTaskException, AccessDeniedException {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new NoSuchTaskException("Task Not Found with task id " + id));
+        if (!user.getProjects().contains(project)) {
+            throw new AccessDeniedException("you do not have access to this task");
+        }
+        project.setPriority(priority);
+        return projectRepository.save(project);
     }
 
     public Project deleteProjectById(String jwt, Long id) throws NoSuchProjectException, AccessDeniedException, NoSuchTaskException {

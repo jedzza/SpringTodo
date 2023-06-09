@@ -6,6 +6,7 @@ import com.lazy.todo.exceptions.NoSuchTaskException;
 import com.lazy.todo.models.Project;
 import com.lazy.todo.models.Task;
 import com.lazy.todo.payload.request.PriorityUpdate;
+import com.lazy.todo.payload.request.PriorityUpdateList;
 import com.lazy.todo.payload.request.ProjectRequest;
 import com.lazy.todo.payload.request.TaskRequest;
 import com.lazy.todo.payload.response.MessageResponse;
@@ -105,11 +106,11 @@ public class ProjectController {
     @PutMapping("/priority")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> updateProjectPriority(@RequestHeader(name = "Authorization") String token,
-                                                       @RequestBody List<PriorityUpdate> updateList) {
+                                                       @RequestBody PriorityUpdateList updateList) {
         String jwt = token.substring(7);
-        List <Project> returnProjects = new ArrayList<>();
+        List<Project> returnProjects = new ArrayList<>();
         if (jwtUtils.validateJwtToken(jwt) && jwt != null) {
-            for (PriorityUpdate priorityUpdate: updateList)
+            for (PriorityUpdate priorityUpdate: updateList.getPriorityUpdates())
             {
                 try {
                     returnProjects.add(projectService.setProjectPriority(jwt, priorityUpdate.getId(), priorityUpdate.getPriority()));

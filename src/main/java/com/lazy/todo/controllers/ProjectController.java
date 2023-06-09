@@ -85,24 +85,18 @@ public class ProjectController {
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
-    @GetMapping("/tasks/all/current/{id}")
+    @GetMapping("/all/sorted")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> getAllCurrentProjectTasks(@RequestHeader(name = "Authorization") String token,
-                                                       @PathVariable("id") Long id) {
+    public ResponseEntity<?> getAllCurrentProjectTasks(@RequestHeader(name = "Authorization") String token) {
 
         String jwt = token.substring(7);
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-            try {
-                return ResponseEntity.ok(sortingService.getCurrentProjectTasks(jwt, id));
-            } catch (AccessDeniedException e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-            } catch (NoSuchProjectException e) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
-            }
+                return ResponseEntity.ok(sortingService.getSortedProjects(jwt));
         }
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
+
     @PutMapping("/priority")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> updateProjectPriority(@RequestHeader(name = "Authorization") String token,

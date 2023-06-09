@@ -149,6 +149,7 @@ public class ProjectService {
         Task task = new Task();
         BeanUtils.copyProperties(taskRequest, task,"id");
         task.setProject(project);
+        task.getUsers().add(user);
         taskRepository.save(task);
         return project;
     }

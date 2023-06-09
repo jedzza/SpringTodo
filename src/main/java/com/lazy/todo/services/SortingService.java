@@ -60,4 +60,13 @@ public class SortingService {
         q.setParameter(2, projectId);
         return q.getResultList();
     }
+
+    public List<Project> getSortedProjects(String jwt) {
+        String username =jwtUtils.getUserNameFromJwtToken(jwt);
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username " + username));
+        Query q = entityManager.createNamedQuery("Project.sortedProjects");
+        q.setParameter(1, user.getId());
+        return q.getResultList();
+    }
 }

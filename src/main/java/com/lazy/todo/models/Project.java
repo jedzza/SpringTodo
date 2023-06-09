@@ -20,10 +20,16 @@ import java.util.Set;
                 "\t\tON ut.user_id = u.id\n" +
                 "\tINNER JOIN defaultdb.tasks t\n" +
                 "\t\tON ut.task_id = t.id\n" +
-                "WHERE (t.completed_on > (NOW() - INTERVAL 1 YEAR) OR t.checked IS NULL)\n" +
+                "WHERE (t.completed_on > (NOW() - INTERVAL 1 DAY) OR t.checked IS NULL)\n" +
                 "AND u.id = (?1)" +
                 "AND t.project_id = (?2)\n" +
                 "ORDER BY t.priority")
+
+@NamedNativeQuery(name = "Project.sortedProjects",
+        query = "SELECT p.id, p.title, p.description, p.checked, p.priority\n" +
+                "FROM defaultdb.projects p\n" +
+                "WHERE p.owner_id = ?1\n" +
+                "order by priority;")
 
 @Getter
 @Setter
@@ -57,6 +63,7 @@ public class Project {
         this.title= title;
         this.description =description;
     }
+
 
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;

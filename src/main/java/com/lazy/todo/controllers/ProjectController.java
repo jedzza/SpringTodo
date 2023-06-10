@@ -87,11 +87,30 @@ public class ProjectController {
     }
     @GetMapping("/all/sorted")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> getAllCurrentProjectTasks(@RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<?> getAllCurrentProjects(@RequestHeader(name = "Authorization") String token) {
 
         String jwt = token.substring(7);
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 return ResponseEntity.ok(sortingService.getSortedProjects(jwt));
+        }
+        return ResponseEntity
+                .badRequest().body(new MessageResponse("JWT authentication error"));
+    }
+
+    @GetMapping("/all/tasks/sorted/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getAllCurrentProjectTasks(@RequestHeader(name = "Authorization") String token,
+                                                       @PathVariable("id") Long id) {
+
+        String jwt = token.substring(7);
+        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            try {
+                return ResponseEntity.ok(sortingService.getCurrentProjectTasks(jwt, id));
+            } catch (NoSuchProjectException e) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+            } catch (AccessDeniedException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            }
         }
         return ResponseEntity
                 .badRequest().body(new MessageResponse("JWT authentication error"));
@@ -164,7 +183,7 @@ public class ProjectController {
     /**
      * Accept a Taskrequest, add task to a project
      */
-    @PutMapping("/addTask/{id}")
+    @PostMapping("/addTask/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> addTaskToProject(@PathVariable("id") Long id,
                                               @RequestHeader(name = "Authorization") String token,

@@ -137,7 +137,7 @@ public class ProjectService {
         return deletedProject;
     }
 
-    public Project addTaskToProject(String jwt, Long projectId, TaskRequest taskRequest) throws NoSuchProjectException, AccessDeniedException {
+    public Task addTaskToProject(String jwt, Long projectId, TaskRequest taskRequest) throws NoSuchProjectException, AccessDeniedException {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with userame: " + username));
@@ -149,8 +149,8 @@ public class ProjectService {
         Task task = new Task();
         BeanUtils.copyProperties(taskRequest, task,"id");
         task.setProject(project);
-        task.getUsers().add(user);
+        user.getTasks().add(task);
         taskRepository.save(task);
-        return project;
+        return task;
     }
 }

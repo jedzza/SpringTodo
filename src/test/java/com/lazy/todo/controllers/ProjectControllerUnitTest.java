@@ -182,8 +182,8 @@ class ProjectControllerUnitTest {
     @Test
     void addTaskToProjectTest() {
         when(jwtUtils.validateJwtToken("placeholderJwt")).thenReturn(true);
-        when(projectService.addTaskToProject("placeholderJwt", 1L, TASK_REQUEST_1)).thenReturn(PROJECT_1);
-        assertEquals(ResponseEntity.ok(PROJECT_1), projectController.addTaskToProject(1L, "bearer:placeholderJwt", TASK_REQUEST_1));
+        when(projectService.addTaskToProject("placeholderJwt", 1L, TASK_REQUEST_1)).thenReturn(TASK_1);
+        assertEquals(ResponseEntity.ok(TASK_1), projectController.addTaskToProject(1L, "bearer:placeholderJwt", TASK_REQUEST_1));
     }
     @SneakyThrows
     @Test

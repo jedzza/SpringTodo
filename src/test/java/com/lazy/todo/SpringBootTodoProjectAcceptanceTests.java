@@ -163,14 +163,14 @@ public class SpringBootTodoProjectAcceptanceTests {
     @WithMockUser(username = "testUser1")
     public void addTaskToProjectTest() throws Exception {
         mockMvc.perform(
-                        put("/api/project/addTask/1")
+                        post("/api/project/addTask/1")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", "bearer:" + generateJwtToken())
                                 .content(gson.toJson(TASK_REQUEST_1))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.tasks.[0].title", is(TASK_REQUEST_1.getTitle())))
+                .andExpect(jsonPath("$.title", is(TASK_REQUEST_1.getTitle())))
                 .andReturn().getResponse().getContentAsString();
         }
 }

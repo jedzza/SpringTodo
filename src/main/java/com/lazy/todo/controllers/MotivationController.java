@@ -112,5 +112,18 @@ public class MotivationController {
         // return the first response
 
     }
+    @GetMapping("/personality")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> getPersonality(@RequestHeader(name = "Authorization") String token) {
+        String jwt = token.substring(7);
+        try {
+            return ResponseEntity.ok(accountService.getPersonality(jwt));
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No username found");
+        }
+
+        // return the first response
+
+    }
 
 }

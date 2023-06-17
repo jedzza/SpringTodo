@@ -35,6 +35,13 @@ public class AccountService {
         return username + " successfully deleted";
     }
 
+    public String getPersonality(String jwt) throws  UsernameNotFoundException {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username " + username));
+        return user.getPersonality();
+    }
+
     public User changePersonality(String jwt, String personality) throws  UsernameNotFoundException {
         String username = jwtUtils.getUserNameFromJwtToken(jwt);
         User user = userRepository.findByUsername(username)

@@ -111,7 +111,7 @@ on a first install, this test will fail as testuser2 will be added to the databa
 	@Test
 	@Order(3)
 	public void loginTest() throws Exception {
-		LoginRequest loginRequest = new LoginRequest("testUser2", "password");
+		LoginRequest loginRequest = new LoginRequest("test@test.com", "password");
 		mockMvc.perform(
 						post("/api/auth/signin")
 								.contentType(MediaType.APPLICATION_JSON)

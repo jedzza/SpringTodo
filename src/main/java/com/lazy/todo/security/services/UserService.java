@@ -50,6 +50,7 @@ public class UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username " + username));
         user.setEmail(email);
+        userRepository.save(user);
         return "email successfully updated to " + email;
     }
 

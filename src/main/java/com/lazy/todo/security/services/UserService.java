@@ -45,4 +45,12 @@ public class UserService {
         return username + " successfully deleted";
     }
 
+    public String updateEmail(String jwt, String email) throws  UsernameNotFoundException{
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username " + username));
+        user.setEmail(email);
+        return "email successfully updated to " + email;
+    }
+
 }

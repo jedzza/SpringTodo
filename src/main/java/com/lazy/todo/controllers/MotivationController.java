@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 //this controller allows us to accesss OpenAPI to get motivation or congratulations for completing tasks
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/motivation")
 public class MotivationController {
@@ -97,7 +98,9 @@ public class MotivationController {
                 .badRequest().body(new MessageResponse("JWT authentication error"));
     }
 
+
     //Allow users to change their encouragement personality
+
     @PostMapping("/personality/{personality}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> changePersonality(@PathVariable("personality") String personality,
@@ -112,6 +115,8 @@ public class MotivationController {
         // return the first response
 
     }
+
+
     @GetMapping("/personality")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> getPersonality(@RequestHeader(name = "Authorization") String token) {

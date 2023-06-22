@@ -64,7 +64,7 @@ public class Project {
         this.description =description;
     }
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
